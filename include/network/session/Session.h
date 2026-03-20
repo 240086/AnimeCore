@@ -1,59 +1,45 @@
 #pragma once
-
 #include <memory>
 #include <chrono>
-#include "game/actor/PlayerActor.h"
+#include <any> // C++17 提供的强大工具
 
 class Connection;
-class Player;
 
 class Session
 {
 public:
-    explicit Session(uint64_t sessionId);
+    Session(uint64_t sessionId);
 
     uint64_t GetSessionId() const;
 
+    // 绑定连接
     void BindConnection(std::shared_ptr<Connection> conn);
-
-    void BindPlayer(std::shared_ptr<Player> player);
-
-    std::shared_ptr<Player> GetPlayer();
-
     std::shared_ptr<Connection> GetConnection();
 
+    // 🔥 核心重构：使用 std::any 替代具体的 Player
+    // 这样 Session 就完全不需要知道 Player 的存在了
+    void SetUserContext(std::any context) { user_context_ = std::move(context); }
+
+    template <typename T>
+    std::shared_ptr<T> GetUserContextAs()
+    {
+        try
+        {
+            return std::any_cast<std::shared_ptr<T>>(user_context_);
+        }
+        catch (const std::bad_any_cast &)
+        {
+            return nullptr;
+        }
+    }
+
     void UpdateHeartbeat();
-
     std::chrono::steady_clock::time_point GetLastHeartbeat() const;
-
-    void BindActor(std::shared_ptr<PlayerActor> actor)
-    {
-        actor_ = actor;
-    }
-
-    std::shared_ptr<PlayerActor> GetActor()
-    {
-        return actor_;
-    }
-
-    void UnbindPlayer()
-    {
-        player_.reset();
-    }
-
-    void UnbindActor()
-    {
-        actor_.reset();
-    }
 
 private:
     uint64_t session_id_;
-
     std::weak_ptr<Connection> connection_;
-
-    std::shared_ptr<Player> player_;
-
     std::chrono::steady_clock::time_point last_heartbeat_;
 
-    std::shared_ptr<PlayerActor> actor_;
+    std::any user_context_; // 类型擦除，可以存任何东西
 };
