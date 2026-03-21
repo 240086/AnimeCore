@@ -2,6 +2,16 @@
 
 #include <string>
 #include <yaml-cpp/yaml.h>
+#include <utility>
+#include <vector>
+
+struct GameServerNode
+{
+    int id;
+    std::string host;
+    int port;
+    int connections;
+};
 
 class Config
 {
@@ -12,6 +22,18 @@ public:
 
     int GetServerPort() const;
     int GetWorkerThreads() const;
+
+    // --- 后端服务器集群 (新的) ---
+    std::vector<GameServerNode> GetGameServers() const;
+
+    // --- 路由逻辑 (关键) ---
+    // 返回 pair: [min_id, max_id]
+    std::pair<int, int> GetLoginRange() const;
+    std::pair<int, int> GetGameRange() const;
+
+    // --- 超时与保护 ---
+    int GetBackendRequestTimeout() const;
+    int GetClientIdleTimeout() const;
 
     std::string GetMysqlHost() const;
     int GetMysqlPort() const;
@@ -35,6 +57,9 @@ public:
 private:
     Config() = default;
 
-private:
+    // 内部泛型工具：增加安全性
+    template <typename T>
+    T GetValue(const std::vector<std::string> &path, T defaultValue) const;
+    
     YAML::Node root;
 };

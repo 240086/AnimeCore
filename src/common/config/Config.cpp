@@ -99,3 +99,60 @@ int Config::GetBackendPoolSize() const
 {
     return root["backend"]["pool_size"].as<int>(4);
 }
+
+// 2. 解析服务器列表 (重点)
+std::vector<GameServerNode> Config::GetGameServers() const
+{
+    std::vector<GameServerNode> servers;
+    try
+    {
+        auto nodes = root["backend"]["game_servers"];
+        if (nodes && nodes.IsSequence())
+        {
+            for (const auto &node : nodes)
+            {
+                servers.push_back({node["id"].as<int>(),
+                                   node["host"].as<std::string>(),
+                                   node["port"].as<int>(),
+                                   node["connections"].as<int>(4)});
+            }
+        }
+    }
+    catch (...)
+    {
+        // 生产环境应记录日志
+    }
+    return servers;
+}
+
+// 3. 解析路由范围 [min, max]
+std::pair<int, int> Config::GetLoginRange() const
+{
+    if (root["routing"]["login_range"])
+    {
+        auto range = root["routing"]["login_range"];
+        return {range[0].as<int>(), range[1].as<int>()};
+    }
+    return {0, 999};
+}
+
+std::pair<int, int> Config::GetGameRange() const
+{
+    if (root["routing"]["game_range"])
+    {
+        auto range = root["routing"]["game_range"];
+        return {range[0].as<int>(), range[1].as<int>()};
+    }
+    return {1000, 1999};
+}
+
+// 4. 超时配置
+int Config::GetBackendRequestTimeout() const
+{
+    return root["timeout"]["backend_request_ms"].as<int>(1500);
+}
+
+int Config::GetClientIdleTimeout() const
+{
+    return root["timeout"]["client_idle_ms"].as<int>(60000);
+}
