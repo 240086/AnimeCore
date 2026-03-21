@@ -1,3 +1,0 @@
-F:/VSCode_project/Cpp_Proj/AnimeGame/AnimeCore/build/CMakeFiles/AnimeCore.dir
-F:/VSCode_project/Cpp_Proj/AnimeGame/AnimeCore/build/CMakeFiles/edit_cache.dir
-F:/VSCode_project/Cpp_Proj/AnimeGame/AnimeCore/build/CMakeFiles/rebuild_cache.dir
