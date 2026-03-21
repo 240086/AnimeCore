@@ -1,6 +1,6 @@
 #include "common/metrics/Metrics.h"
 #include "common/logger/Logger.h"
-#include "MetricsReporter.h"
+#include "common/metrics/MetricsReporter.h"
 
 MetricsReporter::MetricsReporter(boost::asio::io_context &io)
     : timer_(io)
