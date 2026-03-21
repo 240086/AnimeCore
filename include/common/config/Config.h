@@ -26,6 +26,12 @@ public:
 
     std::string GetConfigDir() const;
 
+    // --- 网关(Gateway) 核心配置 ---
+    int GetGatewayPort() const;         // 网关监听端口（原 GetServerPort）
+    std::string GetBackendHost() const; // 后端 Server IP
+    int GetBackendPort() const;         // 后端 Server 端口
+    int GetBackendPoolSize() const;     // 转发连接池大小
+
 private:
     Config() = default;
 

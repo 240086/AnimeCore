@@ -79,3 +79,23 @@ std::string Config::GetConfigDir() const
 {
     return "config/";
 }
+
+int Config::GetGatewayPort() const
+{
+    return root["gateway"]["port"].as<int>(10000); // 默认 10000
+}
+
+std::string Config::GetBackendHost() const
+{
+    return root["backend"]["host"].as<std::string>("127.0.0.1");
+}
+
+int Config::GetBackendPort() const
+{
+    return root["backend"]["port"].as<int>(9000);
+}
+
+int Config::GetBackendPoolSize() const
+{
+    return root["backend"]["pool_size"].as<int>(4);
+}
