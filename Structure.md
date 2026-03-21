@@ -1,6 +1,7 @@
 
 ```
 AnimeCore
+├─ CMakeLists.txt
 ├─ include
 │  ├─ common
 │  │  ├─ config
@@ -8,6 +9,8 @@ AnimeCore
 │  │  ├─ ErrorCode.h
 │  │  ├─ logger
 │  │  │  └─ Logger.h
+│  │  ├─ metrics
+│  │  │  └─ Metrics.h
 │  │  └─ thread
 │  │     ├─ GlobalThreadPool.h
 │  │     └─ ThreadPool.h
@@ -19,6 +22,8 @@ AnimeCore
 │     ├─ Connection.h
 │     ├─ protocol
 │     │  ├─ IMessage.h
+│     │  ├─ InternalPacket.h
+│     │  ├─ InternalPacketParser.h
 │     │  ├─ MessageId.h
 │     │  ├─ Packet.h
 │     │  ├─ PacketParser.h
@@ -30,6 +35,8 @@ AnimeCore
 │  │  │  └─ Config.cpp
 │  │  ├─ logger
 │  │  │  └─ Logger.cpp
+│  │  ├─ metrics
+│  │  │  └─ Metrics.cpp
 │  │  └─ thread
 │  │     ├─ GlobalThreadPool.cpp
 │  │     └─ ThreadPool.cpp
@@ -40,6 +47,8 @@ AnimeCore
 │     │  └─ RecvBuffer.cpp
 │     ├─ Connection.cpp
 │     ├─ protocol
+│     │  ├─ InternalPacket.cpp
+│     │  ├─ InternalPacketParser.cpp
 │     │  ├─ Packet.cpp
 │     │  └─ PacketParser.cpp
 │     └─ TcpServer.cpp
