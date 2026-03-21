@@ -22,9 +22,7 @@ AnimeCore
 │     │  ├─ MessageId.h
 │     │  ├─ Packet.h
 │     │  ├─ PacketParser.h
-│     │  ├─ ProtoMessage.h
-│     │  └─ ResponseSender.h
-│     ├─ session
+│     │  └─ ProtoMessage.h
 │     └─ TcpServer.h
 ├─ src
 │  ├─ common
