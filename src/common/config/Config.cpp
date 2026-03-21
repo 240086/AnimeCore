@@ -1,4 +1,5 @@
 #include "common/config/Config.h"
+#include "common/logger/Logger.h"
 
 Config &Config::Instance()
 {
@@ -100,7 +101,6 @@ int Config::GetBackendPoolSize() const
     return root["backend"]["pool_size"].as<int>(4);
 }
 
-// 2. 解析服务器列表 (重点)
 std::vector<GameServerNode> Config::GetGameServers() const
 {
     std::vector<GameServerNode> servers;
@@ -111,16 +111,19 @@ std::vector<GameServerNode> Config::GetGameServers() const
         {
             for (const auto &node : nodes)
             {
-                servers.push_back({node["id"].as<int>(),
-                                   node["host"].as<std::string>(),
-                                   node["port"].as<int>(),
+                // 🔥 关键修改：将 node["id"] 改为 node["type"]
+                // 并确保使用 as<std::string>()
+                servers.push_back({node["type"].as<std::string>("UNKNOWN"), // 读取字符串类型
+                                   node["host"].as<std::string>("127.0.0.1"),
+                                   node["port"].as<int>(9000),
                                    node["connections"].as<int>(4)});
             }
         }
     }
-    catch (...)
+    catch (const std::exception &e)
     {
-        // 生产环境应记录日志
+        // 审计建议：即使是 catch，也最好打印出具体的错误原因，方便排查 YAML 格式问题
+        LOG_ERROR("YAML Parse Error in GetGameServers: {}", e.what());
     }
     return servers;
 }

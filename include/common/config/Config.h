@@ -7,7 +7,7 @@
 
 struct GameServerNode
 {
-    int id;
+    std::string typeStr; // 存储字符串，如 "LOGIN"
     std::string host;
     int port;
     int connections;
@@ -60,6 +60,6 @@ private:
     // 内部泛型工具：增加安全性
     template <typename T>
     T GetValue(const std::vector<std::string> &path, T defaultValue) const;
-    
+
     YAML::Node root;
 };
