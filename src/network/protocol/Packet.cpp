@@ -1,7 +1,6 @@
 #include "network/protocol/Packet.h"
 #include <cstring>
 #include <boost/asio/detail/socket_ops.hpp>
-#include "network/protocol/Packet.h"
 
 namespace socket_ops = boost::asio::detail::socket_ops;
 

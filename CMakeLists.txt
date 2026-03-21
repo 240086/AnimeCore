@@ -32,7 +32,7 @@ target_link_libraries(AnimeCore
         Boost::system
         spdlog::spdlog
         fmt::fmt
-        yaml-cpp
+        yaml-cpp::yaml-cpp
 )
 
 # Windows 下的额外支持
