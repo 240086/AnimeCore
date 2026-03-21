@@ -1,0 +1,312 @@
+{
+	"inputs" : 
+	[
+		{
+			"path" : "CMakeLists.txt"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build/CMakeFiles/4.2.3/CMakeSystem.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Platform/Windows-Initialize.cmake"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build/CMakeFiles/4.2.3/CMakeCXXCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Platform/Windows.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Platform/WindowsPaths.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeCXXInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeLanguageInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Compiler/GNU.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU.cmake"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build/CMakeFiles/4.2.3/CMakeRCCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeRCInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Platform/Windows-windres.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX-ABI.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeCommonLanguageInclude.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Internal/CMakeCXXLinkerInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Internal/CMakeCommonLinkerInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Linker/GNU-CXX.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Linker/GNU.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Platform/Linker/Windows-GNU-CXX.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Platform/Linker/Windows-GNU.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/Platform/Linker/GNU.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/FindBoost.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/FindPackageHandleStandardArgs.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/FindPackageMessage.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/Boost-1.90.0/BoostConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/Boost-1.90.0/BoostConfig.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_headers-1.90.0/boost_headers-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_headers-1.90.0/boost_headers-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_headers-1.90.0/boost_headers-targets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_system-1.90.0/boost_system-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_system-1.90.0/boost_system-config.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_assert-1.90.0/boost_assert-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_assert-1.90.0/boost_assert-config.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_config-1.90.0/boost_config-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_config-1.90.0/boost_config-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_config-1.90.0/boost_config-targets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_assert-1.90.0/boost_assert-targets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_throw_exception-1.90.0/boost_throw_exception-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_throw_exception-1.90.0/boost_throw_exception-config.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_throw_exception-1.90.0/boost_throw_exception-targets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_variant2-1.90.0/boost_variant2-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_variant2-1.90.0/boost_variant2-config.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_mp11-1.90.0/boost_mp11-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_mp11-1.90.0/boost_mp11-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_mp11-1.90.0/boost_mp11-targets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_variant2-1.90.0/boost_variant2-targets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_winapi-1.90.0/boost_winapi-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_winapi-1.90.0/boost_winapi-config.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/share/cmake/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_predef-1.90.0/boost_predef-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_predef-1.90.0/boost_predef-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_predef-1.90.0/boost_predef-targets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_winapi-1.90.0/boost_winapi-targets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "F:/msys64/mingw64/lib/cmake/boost_system-1.90.0/boost_system-targets.cmake"
+		}
+	],
+	"kind" : "cmakeFiles",
+	"paths" : 
+	{
+		"build" : "F:/VSCode_project/Cpp_Proj/AnimeGame/AnimeCore/build",
+		"source" : "F:/VSCode_project/Cpp_Proj/AnimeGame/AnimeCore"
+	},
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 1
+	}
+}

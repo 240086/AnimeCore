@@ -1,8 +1,5 @@
 #include "network/Connection.h"
 #include "common/logger/Logger.h"
-#include "network/dispatcher/MessageDispatcher.h"
-#include "network/manager/ConnectionManager.h"
-#include "network/session/SessionManager.h"
 #include "common/thread/GlobalThreadPool.h"
 
 Connection::tcp::socket &Connection::GetSocket()

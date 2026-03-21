@@ -1,0 +1,186 @@
+{
+	"configurations" : 
+	[
+		{
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::assert::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__assert-Debug-5900faf8ad549cd3d91e.json",
+					"name" : "Boost::assert",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::boost::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__boost-Debug-92803f5aec788afa24e3.json",
+					"name" : "Boost::boost",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::config::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__config-Debug-afdbd13e7efdd69a9b67.json",
+					"name" : "Boost::config",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::diagnostic_definitions::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__diagnostic_definitions-Debug-3d037a4db550189b04dc.json",
+					"name" : "Boost::diagnostic_definitions",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::disable_autolinking::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__disable_autolinking-Debug-bcc96aa8d3080137eec3.json",
+					"name" : "Boost::disable_autolinking",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::dynamic_linking::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__dynamic_linking-Debug-1a3ddd820cc976fec1d2.json",
+					"name" : "Boost::dynamic_linking",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::headers::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__headers-Debug-03b59aa50bc2844657dc.json",
+					"name" : "Boost::headers",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::mp11::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__mp11-Debug-83daaeb32dcd96845b26.json",
+					"name" : "Boost::mp11",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::predef::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__predef-Debug-20ab14c08c16f1f6a64d.json",
+					"name" : "Boost::predef",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::system::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__system-Debug-a7b1b469962b68e9cc64.json",
+					"name" : "Boost::system",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::throw_exception::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__throw_exception-Debug-5d1826cbc191d7b0692d.json",
+					"name" : "Boost::throw_exception",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::variant2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__variant2-Debug-9e9970c2d74b5da36cf2.json",
+					"name" : "Boost::variant2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Boost::winapi::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Boost__winapi-Debug-5059d4fee71b3c71b118.json",
+					"name" : "Boost::winapi",
+					"projectIndex" : 0
+				}
+			],
+			"directories" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12
+					],
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f6f22219c74102c3da70.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "AnimeCore",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "AnimeCore::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-AnimeCore-Debug-2313ba6175006d3efd34.json",
+					"name" : "AnimeCore",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "F:/VSCode_project/Cpp_Proj/AnimeGame/AnimeCore/build",
+		"source" : "F:/VSCode_project/Cpp_Proj/AnimeGame/AnimeCore"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	}
+}
