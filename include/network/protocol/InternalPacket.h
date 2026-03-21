@@ -11,6 +11,7 @@ struct InternalPacketHeader
     uint32_t length; // body + sid + msgId
     uint32_t sessionId;
     uint16_t messageId;
+    uint16_t flags;
 };
 #pragma pack(pop)
 

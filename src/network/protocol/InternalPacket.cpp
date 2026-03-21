@@ -10,7 +10,7 @@ void InternalPacket::Append(const char *data, size_t len)
     size_t currentSize = body_.size();
 
     // 2. 一次性调整大小（相比 push_back 更快）
-    body_.resize(currentSize + len);
+    body_.reserve(body_.size() + len);
 
     // 3. 使用 std::memcpy 进行高速内存拷贝
     std::memcpy(body_.data() + currentSize, data, len);
@@ -18,10 +18,13 @@ void InternalPacket::Append(const char *data, size_t len)
 
 std::vector<char> InternalPacket::Serialize() const
 {
-    uint32_t totalLen = static_cast<uint32_t>(body_.size() + 6); // sid(4) + msgid(2)
+    constexpr size_t HEADER_SIZE = 10;
+
+    uint32_t bodyLen = static_cast<uint32_t>(body_.size());
+    uint32_t totalLen = bodyLen + 6;
 
     std::vector<char> sendBuf;
-    sendBuf.resize(totalLen + 4);
+    sendBuf.resize(HEADER_SIZE + bodyLen);
 
     uint32_t netLen = htonl(totalLen);
     uint32_t netSid = htonl(header_.sessionId);
@@ -30,7 +33,11 @@ std::vector<char> InternalPacket::Serialize() const
     std::memcpy(sendBuf.data(), &netLen, 4);
     std::memcpy(sendBuf.data() + 4, &netSid, 4);
     std::memcpy(sendBuf.data() + 8, &netMsgId, 2);
-    std::memcpy(sendBuf.data() + 10, body_.data(), body_.size());
+
+    if (bodyLen > 0)
+    {
+        std::memcpy(sendBuf.data() + HEADER_SIZE, body_.data(), bodyLen);
+    }
 
     return sendBuf;
 }
