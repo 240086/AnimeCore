@@ -83,7 +83,7 @@ std::string Config::GetConfigDir() const
 
 int Config::GetGatewayPort() const
 {
-    return root["gateway"]["port"].as<int>(10000); // 默认 10000
+    return root["server"]["port"].as<int>(10000); // 默认 10000
 }
 
 std::string Config::GetBackendHost() const
@@ -158,4 +158,27 @@ int Config::GetBackendRequestTimeout() const
 int Config::GetClientIdleTimeout() const
 {
     return root["timeout"]["client_idle_ms"].as<int>(60000);
+}
+
+template <typename T>
+T Config::GetValue(const std::vector<std::string> &path, T defaultValue) const
+{
+    try
+    {
+        YAML::Node current = root;
+        for (const auto &key : path)
+        {
+            if (!current[key])
+            {
+                return defaultValue; // 路径中某个 Key 不存在，安全返回
+            }
+            current = current[key];
+        }
+        return current.as<T>();
+    }
+    catch (...)
+    {
+        // 类型转换失败（比如本该是 int 的地方写了字符串）
+        return defaultValue;
+    }
 }
