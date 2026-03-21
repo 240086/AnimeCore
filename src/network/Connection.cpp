@@ -12,8 +12,7 @@ Connection::Connection(
       options_(std::move(options))
 {
 }
-
-Connection::tcp::socket &Connection::GetSocket()
+boost::asio::ip::tcp::socket &Connection::GetSocket()
 {
     return socket_;
 }

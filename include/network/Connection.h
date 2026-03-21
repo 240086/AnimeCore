@@ -13,36 +13,37 @@
 #include "network/protocol/Packet.h"
 #include "network/protocol/PacketParser.h"
 
+using tcp = boost::asio::ip::tcp;
+using strand_type = boost::asio::strand<boost::asio::io_context::executor_type>;
+using Task = std::function<void()>;
+
+class Connection;
+struct Callbacks
+{
+    // 收到完整业务包后触发（在连接所属 io_context 线程上执行）
+    std::function<void(const std::shared_ptr<Connection> &, uint16_t, const char *, size_t)> onPacket;
+
+    // 连接关闭后触发（在连接所属 io_context 线程上执行）
+    std::function<void(const std::shared_ptr<Connection> &, uint64_t connectionId, uint64_t sessionId)> onClosed;
+
+    // 需要异步清理 Session 资源时触发（由 cleanupExecutor 决定执行线程）
+    std::function<void(uint64_t sessionId)> onSessionCleanup;
+};
+
+struct Options
+{
+    size_t maxWriteQueueSize = 1024;
+    // 若提供，将重清理任务投递到业务线程池/执行器
+    std::function<void(Task)> cleanupExecutor;
+};
+
 class Connection : public std::enable_shared_from_this<Connection>
 {
 public:
-    using tcp = boost::asio::ip::tcp;
-    using strand_type = boost::asio::strand<boost::asio::io_context::executor_type>;
-    using Task = std::function<void()>;
-
-    struct Callbacks
-    {
-        // 收到完整业务包后触发（在连接所属 io_context 线程上执行）
-        std::function<void(const std::shared_ptr<Connection> &, uint16_t, const char *, size_t)> onPacket;
-
-        // 连接关闭后触发（在连接所属 io_context 线程上执行）
-        std::function<void(const std::shared_ptr<Connection> &, uint64_t connectionId, uint64_t sessionId)> onClosed;
-
-        // 需要异步清理 Session 资源时触发（由 cleanupExecutor 决定执行线程）
-        std::function<void(uint64_t sessionId)> onSessionCleanup;
-    };
-
-    struct Options
-    {
-        size_t maxWriteQueueSize = 1024;
-        // 若提供，将重清理任务投递到业务线程池/执行器
-        std::function<void(Task)> cleanupExecutor;
-    };
-
     explicit Connection(
         boost::asio::io_context &ioContext,
-        Callbacks callbacks = {},
-        Options options = {});
+        Callbacks callbacks = Callbacks{},
+        Options options = Options{});
 
     tcp::socket &GetSocket();
 

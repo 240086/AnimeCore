@@ -1,0 +1,29 @@
+# === AnimeCore/CMake 编译产物 ===
+build/
+bin/
+lib/
+out/
+CMakeFiles/
+CMakeCache.txt
+*.cmake
+
+# === 编译临时文件 ===
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.exe
+*.pdb
+*.ilk
+
+# === VS Code / IDE 缓存 ===
+.vscode/
+.cache/
+compile_commands.json
+.clangd/
+
+# === 其他系统临时文件 ===
+Thumps.db
+.DS_Store
