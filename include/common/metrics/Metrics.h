@@ -13,6 +13,9 @@ enum class MetricId : uint32_t
     RequestTimeout,
     RateLimitHit,
 
+    CircuitBreakerOpen,
+    BackendFail,
+
     // ---- Gauge ----
     ConnectionActive,
 
