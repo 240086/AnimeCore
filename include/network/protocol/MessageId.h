@@ -1,28 +1,38 @@
 enum MessageId : uint16_t
 {
-    // --- [1 ~ 999] Client -> Server Requests ---
-    MSG_C2S_LOGIN = 1,
-    MSG_C2S_GACHA_DRAW = 10,     // 单抽
-    MSG_C2S_GACHA_DRAW_TEN = 11, // 十连
-    MSG_C2S_GACHA_HISTORY = 12,  // 抽卡历史请求
+    // ========================================================================
+    // [100 ~ 999] LOGIN SERVER 业务区间
+    // ========================================================================
+    MSG_C2S_LOGIN = 100,       // 登录请求
+    MSG_S2C_LOGIN_RESP = 1100, // 登录响应 (C2S + 1000)
 
-    MSG_C2S_HEARTBEAT = 100,
-    MSG_S2C_HEARTBEAT_RESP = 101,
+    // ========================================================================
+    // [1000 ~ 4999] GAME SERVER 业务区间
+    // ========================================================================
+    // --- 抽卡模块 (1100+) ---
+    MSG_C2S_GACHA_DRAW = 1100,     // 单抽
+    MSG_C2S_GACHA_DRAW_TEN = 1101, // 十连
+    MSG_C2S_GACHA_HISTORY = 1102,  // 抽卡历史
 
-    // --- [1000 ~ 1999] Server -> Client Responses ---
-    MSG_S2C_LOGIN_RESP = 1001,
-    MSG_S2C_GACHA_DRAW_RESP = 1010,
-    MSG_S2C_GACHA_DRAW_TEN_RESP = 1011,
-    MSG_S2C_GACHA_HISTORY_RESP = 1012,
+    MSG_S2C_GACHA_DRAW_RESP = 2100,     // 单抽响应 (C2S + 1000)
+    MSG_S2C_GACHA_DRAW_TEN_RESP = 2101, // 十连响应
+    MSG_S2C_GACHA_HISTORY_RESP = 2102,  // 历史响应
 
-    // --- [2000 ~ 2999] Server -> Client Push (预留：服务端主动推送) ---
-    // 例如：玩家在其他端登录导致被踢、系统公告、货币变更异步通知
-    MSG_S2C_NOTIFY_KICK = 2001,
-    MSG_S2C_NOTIFY_CURRENCY = 2002,
-    MSG_S2C_NOTIFY_INVENTORY = 2003,
+    // --- 玩家通用/基础模块 (1200+) ---
+    MSG_C2S_HEARTBEAT = 1200,
+    MSG_S2C_HEARTBEAT_RESP = 2200,
 
-    // --- [9000 ~ 9999] Error Codes ---
-    MSG_S2C_ERROR = 9000,            // 通用错误
-    MSG_S2C_ERROR_AUTH_FAIL = 9001,         // 登录验证失败
-    MSG_S2C_ERROR_INSUFFICIENT_FUNDS = 9002 // 余额不足
+    // ========================================================================
+    // [5000 ~ 5999] SERVER PUSH (服务端主动推送)
+    // ========================================================================
+    MSG_S2C_NOTIFY_KICK = 5001,      // 踢人通知
+    MSG_S2C_NOTIFY_CURRENCY = 5002,  // 货币变动
+    MSG_S2C_NOTIFY_INVENTORY = 5003, // 背包变动
+
+    // ========================================================================
+    // [9000 ~ 9999] ERROR SYSTEM
+    // ========================================================================
+    MSG_S2C_ERROR = 9000, // 通用错误 (携带具体错误协议体)
+    MSG_S2C_ERROR_AUTH_FAIL = 9001,
+    MSG_S2C_ERROR_FUNDS_LACK = 9002,
 };
