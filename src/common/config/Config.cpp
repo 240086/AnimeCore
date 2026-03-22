@@ -182,3 +182,40 @@ T Config::GetValue(const std::vector<std::string> &path, T defaultValue) const
         return defaultValue;
     }
 }
+
+int Config::GetIpQps() const
+{
+    // 如果 YAML 中没有 limit 节点或 ip_qps 字段，默认给 200
+    if (root["limit"] && root["limit"]["ip_qps"])
+    {
+        return root["limit"]["ip_qps"].as<int>();
+    }
+    return 200;
+}
+
+int Config::GetIpBurst() const
+{
+    if (root["limit"] && root["limit"]["ip_burst"])
+    {
+        return root["limit"]["ip_burst"].as<int>();
+    }
+    return 400;
+}
+
+int Config::GetSidQps() const
+{
+    if (root["limit"] && root["limit"]["sid_qps"])
+    {
+        return root["limit"]["sid_qps"].as<int>();
+    }
+    return 50;
+}
+
+int Config::GetSidBurst() const
+{
+    if (root["limit"] && root["limit"]["sid_burst"])
+    {
+        return root["limit"]["sid_burst"].as<int>();
+    }
+    return 100;
+}

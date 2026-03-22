@@ -54,6 +54,12 @@ public:
     int GetBackendPort() const;         // 后端 Server 端口
     int GetBackendPoolSize() const;     // 转发连接池大小
 
+    //限流
+    int GetIpQps() const;
+    int GetIpBurst() const;
+    int GetSidQps() const;
+    int GetSidBurst() const;
+
 private:
     Config() = default;
 
