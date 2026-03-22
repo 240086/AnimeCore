@@ -32,6 +32,10 @@ class Metrics
 public:
     static Metrics &Instance();
 
+    inline void Add(MetricId id, int64_t val)
+    {
+        counters_[static_cast<size_t>(id)].fetch_add(val, std::memory_order_relaxed);
+    }
     // Counter
     inline void Inc(MetricId id, uint64_t val = 1)
     {
