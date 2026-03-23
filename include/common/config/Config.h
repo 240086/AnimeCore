@@ -1,4 +1,3 @@
-// AnimeCore/include/common/config/Config.h
 #pragma once
 
 #include <yaml-cpp/yaml.h>
@@ -16,12 +15,14 @@ public:
         return instance;
     }
 
-    // 加载配置文件
     bool Load(const std::string &filename)
     {
         try
         {
+            // 明确清除旧数据并加载新文件
             root_ = YAML::LoadFile(filename);
+            if (!root_.IsDefined())
+                return false;
             return true;
         }
         catch (const std::exception &e)
@@ -33,8 +34,6 @@ public:
 
     /**
      * @brief 通用泛型获取接口
-     * @param path 支持点号分隔的路径，如 "server.listen_port"
-     * @param defaultValue 若路径不存在或解析失败返回的默认值
      */
     template <typename T>
     T GetValue(const std::string &path, T defaultValue = T()) const
@@ -42,7 +41,8 @@ public:
         try
         {
             YAML::Node node = FindNode(path);
-            if (!node || node.IsDefined() || node.IsNull())
+            // ✅ 修正：只有当节点“未定义”或者是“空”时，才返回默认值
+            if (!node.IsDefined() || node.IsNull())
             {
                 return defaultValue;
             }
@@ -55,7 +55,7 @@ public:
     }
 
     /**
-     * @brief 获取原始 YAML 节点（用于处理列表或对象）
+     * @brief 获取原始 YAML 节点
      */
     YAML::Node GetNode(const std::string &path) const
     {
@@ -66,23 +66,24 @@ private:
     Config() = default;
     YAML::Node root_;
 
-    // 内部路径解析逻辑
+    // ✅ 优化后的路径解析逻辑
     YAML::Node FindNode(const std::string &path) const
     {
-        std::vector<std::string> keys;
+        if (path.empty())
+            return root_;
+
         std::stringstream ss(path);
         std::string key;
+        YAML::Node curr = YAML::Clone(root_); // 使用 Clone 确保查找状态独立
+
         while (std::getline(ss, key, '.'))
         {
-            keys.push_back(key);
-        }
-
-        YAML::Node curr = root_;
-        for (const auto &k : keys)
-        {
-            if (!curr[k])
-                return YAML::Node(YAML::NodeType::Undefined);
-            curr = curr[k];
+            // 检查当前 key 是否存在
+            if (!curr[key])
+            {
+                return YAML::Node(); // 返回一个 Undefined 节点
+            }
+            curr = curr[key];
         }
         return curr;
     }
