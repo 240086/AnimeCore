@@ -44,7 +44,7 @@ void Connection::DoRead()
 
                     // 2. 准备一个容器接收解析出的消息对象
                     // 使用 shared_ptr 保证消息在分发过程中的生命周期安全
-                    std::vector<std::shared_ptr<IMessage>> messages;
+                    std::vector<std::shared_ptr<anime::IMessage>> messages;
 
                     // 3. 🔥 核心变化：由 Parser 填充 messages 列表
                     // 此时 parser_ 是 std::unique_ptr<PacketParser>
@@ -59,7 +59,7 @@ void Connection::DoRead()
                         if (callbacks_.onPacket)
                         {
                             // 注意：这里的 callbacks_.onPacket 签名需要修改
-                            // 变为：void(std::shared_ptr<Connection>, std::shared_ptr<IMessage>)
+                            // 变为：void(std::shared_ptr<Connection>, std::shared_ptr<anime::IMessage>)
                             callbacks_.onPacket(self, msg);
                         }
                     }

@@ -3,7 +3,7 @@
 #include "common/logger/Logger.h"
 #include <cstring>
 
-void ClientPacketParser::Parse(RecvBuffer &buffer, std::vector<std::shared_ptr<IMessage>> &out)
+void ClientPacketParser::Parse(RecvBuffer &buffer, std::vector<std::shared_ptr<anime::IMessage>> &out)
 {
     constexpr uint32_t MAX_PACKET_SIZE = 2 * 1024 * 1024; // 2MB 限制
     constexpr uint32_t HEADER_SIZE = 6;

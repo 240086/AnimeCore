@@ -3,7 +3,7 @@
 #include "common/logger/Logger.h"
 #include <cstring>
 
-void InternalPacketParser::Parse(RecvBuffer &buffer, std::vector<std::shared_ptr<IMessage>> &out)
+void InternalPacketParser::Parse(RecvBuffer &buffer, std::vector<std::shared_ptr<anime::IMessage>> &out)
 {
     // 对应你的 16 字节头：4(Len)+4(SID)+2(MsgID)+4(SeqID)+2(Flags)
     constexpr size_t HEADER_SIZE = 16;

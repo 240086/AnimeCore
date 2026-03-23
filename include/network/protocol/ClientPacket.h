@@ -4,12 +4,12 @@
 #include <vector>
 #include <boost/asio/detail/socket_ops.hpp>
 
-class ClientPacket : public IMessage
+class ClientPacket : public anime::IMessage
 {
 public:
     // 实现 IMessage 接口
     uint16_t GetMsgId() const override { return msgId_; }
-    MessageType GetType() const override { return MessageType::CLIENT; }
+    anime::MessageType GetType() const override { return anime::MessageType::CLIENT; }
     const char *GetData() const override { return body_.data(); }
     size_t GetDataLen() const override { return body_.size(); }
 

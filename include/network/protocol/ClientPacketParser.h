@@ -15,7 +15,7 @@ public:
 
     // ✅ 修改：删除旧的 Callback，对齐 .cpp 中的实现
     void Parse(RecvBuffer &buffer,
-               std::vector<std::shared_ptr<IMessage>> &out) override;
+               std::vector<std::shared_ptr<anime::IMessage>> &out) override;
 
 private:
     static constexpr size_t HEADER_SIZE = 6;

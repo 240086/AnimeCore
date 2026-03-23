@@ -4,7 +4,7 @@
 #include <boost/asio/detail/socket_ops.hpp>
 #include <vector>
 
-class InternalPacket : public IMessage
+class InternalPacket : public anime::IMessage
 {
 public:
     InternalPacket() = default;
@@ -19,7 +19,7 @@ public:
     }
     // --- 实现 IMessage 接口 ---
     uint16_t GetMsgId() const override { return messageId_; }
-    MessageType GetType() const override { return MessageType::INTERNAL; }
+    anime::MessageType GetType() const override { return anime::MessageType::INTERNAL; }
     const char *GetData() const override { return body_.data(); }
     size_t GetDataLen() const override { return body_.size(); }
 

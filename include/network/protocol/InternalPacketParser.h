@@ -12,7 +12,7 @@ public:
 
     // ✅ 对齐接口
     void Parse(RecvBuffer &buffer,
-               std::vector<std::shared_ptr<IMessage>> &out) override;
+               std::vector<std::shared_ptr<anime::IMessage>> &out) override;
 
 private:
     static constexpr size_t HEADER_SIZE = 16;

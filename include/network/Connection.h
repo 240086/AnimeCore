@@ -23,7 +23,7 @@ struct Callbacks
     // ✅ 统一使用 IMessage 抽象
     std::function<void(
         const std::shared_ptr<Connection> &,
-        std::shared_ptr<IMessage>)>
+        std::shared_ptr<anime::IMessage>)>
         onPacket;
 
     std::function<void(const std::shared_ptr<Connection> &,

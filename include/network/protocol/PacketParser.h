@@ -12,5 +12,5 @@ public:
 
     // 🔥 核心接口：解析 → IMessage
     virtual void Parse(RecvBuffer &buffer,
-                       std::vector<std::shared_ptr<IMessage>> &out) = 0;
+                       std::vector<std::shared_ptr<anime::IMessage>> &out) = 0;
 };

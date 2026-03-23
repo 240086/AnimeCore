@@ -4,7 +4,7 @@
 #include <memory>
 
 template <typename T>
-class ProtoMessage : public IMessage
+class ProtoMessage : public anime::IMessage
 {
 public:
     ProtoMessage(uint16_t msgId, std::shared_ptr<T> pb)
