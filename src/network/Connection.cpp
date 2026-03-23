@@ -7,6 +7,8 @@ Connection::Connection(
     Options options)
     : socket_(ioContext),
       strand_(boost::asio::make_strand(ioContext)),
+      parser_(nullptr),                               // ✅ 显式初始化指针
+      last_active_(std::chrono::steady_clock::now()), // ✅ 显式初始化时间
       callbacks_(std::move(callbacks)),
       options_(std::move(options))
 {

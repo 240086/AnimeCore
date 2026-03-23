@@ -37,7 +37,7 @@ TcpServer::TcpServer(
     {
         connectionFactory_ = [](boost::asio::io_context &ioContext)
         {
-            return std::make_shared<Connection>(ioContext);
+            return std::make_shared<Connection>(ioContext, Callbacks{}, Options{});
         };
     }
 }
