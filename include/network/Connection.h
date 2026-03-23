@@ -11,6 +11,7 @@
 
 #include "network/buffer/RecvBuffer.h"
 #include "network/protocol/InternalPacketParser.h"
+#include "network/protocol/ClientPacketParser.h"
 
 using tcp = boost::asio::ip::tcp;
 using strand_type = boost::asio::strand<boost::asio::io_context::executor_type>;
@@ -93,7 +94,7 @@ private:
     char buffer_[BUFFER_SIZE]{};
 
     RecvBuffer recv_buffer_;
-    InternalPacketParser parser_; // 🔥 替换
+    ClientPacketParser parser_; // 🔥 替换
 
     uint64_t session_id_ = 0;
     uint64_t connection_id_ = 0;

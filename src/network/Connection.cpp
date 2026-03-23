@@ -29,39 +29,46 @@ void Connection::DoRead()
 
     socket_.async_read_some(
         boost::asio::buffer(buffer_, sizeof(buffer_)),
-        boost::asio::bind_executor(strand_,
-                                   [this, self](boost::system::error_code ec, std::size_t length)
-                                   {
-                                       if (!ec)
-                                       {
-                                           last_active_ = std::chrono::steady_clock::now();
-                                           recv_buffer_.Append(buffer_, length);
+        boost::asio::bind_executor(
+            strand_,
+            [this, self](boost::system::error_code ec, std::size_t length)
+            {
+                if (!ec)
+                {
+                    last_active_ = std::chrono::steady_clock::now();
 
-                                           parser_.Parse(
-                                               recv_buffer_,
-                                               [this, self](uint32_t sid,
-                                                            uint16_t msgId,
-                                                            uint32_t seqId,
-                                                            const char *data,
-                                                            size_t len)
-                                               {
-                                                   if (callbacks_.onPacket)
-                                                   {
-                                                       callbacks_.onPacket(self, sid, msgId, seqId, data, len);
-                                                   }
-                                               });
+                    recv_buffer_.Append(buffer_, length);
 
-                                           DoRead();
-                                       }
-                                       else
-                                       {
-                                           if (ec != boost::asio::error::operation_aborted)
-                                           {
-                                               LOG_WARN("client read error: {} conn={}", ec.message(), connection_id_);
-                                           }
-                                           Close();
-                                       }
-                                   }));
+                    // ✅ 只解析业务包（不带 sid / seq）
+                    parser_.Parse(
+                        recv_buffer_,
+                        [this, self](uint16_t msgId,
+                                     const char *data,
+                                     size_t len)
+                        {
+                            if (callbacks_.onPacket)
+                            {
+                                callbacks_.onPacket(
+                                    self,
+                                    msgId,
+                                    data,
+                                    len);
+                            }
+                        });
+
+                    DoRead();
+                }
+                else
+                {
+                    if (ec != boost::asio::error::operation_aborted)
+                    {
+                        LOG_WARN("client read error: {} conn={}",
+                                 ec.message(),
+                                 connection_id_);
+                    }
+                    Close();
+                }
+            }));
 }
 
 void Connection::SendRaw(std::shared_ptr<std::vector<char>> data)
