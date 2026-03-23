@@ -17,3 +17,19 @@ std::vector<char> ClientPacket::Serialize() const
 
     return buf;
 }
+
+void ClientPacket::Append(const char *data, size_t len)
+{
+    if (data && len > 0)
+    {
+        size_t oldSize = body_.size();
+        body_.resize(oldSize + len);
+        std::memcpy(body_.data() + oldSize, data, len);
+    }
+}
+
+// 方便 std::string 接入
+void ClientPacket::Append(const std::string &data)
+{
+    Append(data.data(), data.size());
+}

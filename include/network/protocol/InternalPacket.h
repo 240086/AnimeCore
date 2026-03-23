@@ -7,6 +7,16 @@
 class InternalPacket : public IMessage
 {
 public:
+    InternalPacket() = default;
+
+    InternalPacket(uint32_t sid,
+                   uint16_t msgId,
+                   uint32_t seqId)
+        : sessionId_(sid),
+          messageId_(msgId),
+          sequenceId_(seqId)
+    {
+    }
     // --- 实现 IMessage 接口 ---
     uint16_t GetMsgId() const override { return messageId_; }
     MessageType GetType() const override { return MessageType::INTERNAL; }

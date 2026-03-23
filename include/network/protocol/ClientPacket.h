@@ -19,6 +19,9 @@ public:
 
     std::vector<char> Serialize() const;
 
+    void Append(const char *data, size_t len);
+    void Append(const std::string &data);
+
 private:
     uint16_t msgId_ = 0;
     std::vector<char> body_;
