@@ -33,8 +33,8 @@ void Logger::Init()
         // 3. 将所有 Sinks 组合在一起
         std::vector<spdlog::sink_ptr> sinks{console_sink, file_sink};
 
-        auto name = AnimeCore::Config::Instance().GetValue<std::string>("server.name", "Default");
-        auto id = AnimeCore::Config::Instance().GetValue<int>("server.id", 1);
+        auto name = Config::Instance().GetValue<std::string>("server.name", "Default");
+        auto id = Config::Instance().GetValue<int>("server.id", 1);
 
         std::string loggerName = name + "-" + std::to_string(id);
 
