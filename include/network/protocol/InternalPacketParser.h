@@ -1,17 +1,19 @@
 #pragma once
 
-#include "network/buffer/RecvBuffer.h"
-#include <functional>
-#include <cstdint>
+#include "network/protocol/PacketParser.h"
+#include <vector>
+#include <memory>
 
-class InternalPacketParser
+class InternalPacketParser : public PacketParser
 {
 public:
-    using Callback = std::function<void(uint32_t sid, uint16_t msgId, uint32_t seqId, const char *data, size_t len)>;
+    InternalPacketParser() = default;
+    virtual ~InternalPacketParser() = default;
 
-    void Parse(RecvBuffer &buffer, Callback cb);
+    // ✅ 对齐接口
+    void Parse(RecvBuffer &buffer,
+               std::vector<std::shared_ptr<IMessage>> &out) override;
 
 private:
-    // 🔥 必须与 InternalPacketHeader 严格对齐 (4+4+2+4+2 = 16)
     static constexpr size_t HEADER_SIZE = 16;
 };

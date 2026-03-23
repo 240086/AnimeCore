@@ -1,19 +1,22 @@
 #pragma once
 
-#include "network/buffer/RecvBuffer.h"
-#include <functional>
-#include <cstdint>
+#include "network/protocol/PacketParser.h" // 必须包含基类
+#include "network/protocol/IMessage.h"
 #include <boost/asio/detail/socket_ops.hpp>
 
-class ClientPacketParser
+#include <vector>
+#include <memory>
+
+class ClientPacketParser : public PacketParser // ✅ 继承基类
 {
 public:
-    using Callback = std::function<void(uint16_t msgId,
-                                        const char *data,
-                                        size_t len)>;
+    ClientPacketParser() = default;
+    virtual ~ClientPacketParser() = default;
 
-    void Parse(RecvBuffer &buffer, Callback cb);
+    // ✅ 修改：删除旧的 Callback，对齐 .cpp 中的实现
+    void Parse(RecvBuffer &buffer,
+               std::vector<std::shared_ptr<IMessage>> &out) override;
 
 private:
-    static constexpr size_t HEADER_SIZE = 6; // 4 + 2
+    static constexpr size_t HEADER_SIZE = 6;
 };
