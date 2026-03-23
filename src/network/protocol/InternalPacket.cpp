@@ -16,6 +16,11 @@ void InternalPacket::Append(const char *data, size_t len)
     std::memcpy(body_.data() + currentSize, data, len);
 }
 
+void InternalPacket::Append(const std::string &data)
+{
+    Append(data.c_str(), data.length());
+}
+
 std::vector<char> InternalPacket::Serialize() const
 {
     // 1. 动态计算 Header 大小，增强可维护性

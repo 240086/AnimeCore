@@ -32,9 +32,14 @@ void Logger::Init()
         // 3. 将所有 Sinks 组合在一起
         std::vector<spdlog::sink_ptr> sinks{console_sink, file_sink};
 
+        auto name = Config::Instance().GetString("server.name");
+        auto id = Config::Instance().GetInt("server.id");
+
+        std::string loggerName = name + "-" + std::to_string(id);
+
         // 4. 创建异步 Logger
         s_Logger = std::make_shared<spdlog::async_logger>(
-            "GameServer",
+            loggerName,
             sinks.begin(),
             sinks.end(),
             spdlog::thread_pool(),

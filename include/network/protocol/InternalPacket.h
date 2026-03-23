@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstring>
 #include <boost/asio/detail/socket_ops.hpp>
+#include <string>
 
 #pragma pack(push, 1)
 struct InternalPacketHeader
@@ -19,7 +20,7 @@ struct InternalPacketHeader
 class InternalPacket
 {
 public:
-    InternalPacket() : header_{0, 0, 0, 0, 0} {}
+    InternalPacket() = default;
 
     // 允许构造时直接初始化核心字段，减少多次函数调用
     InternalPacket(uint32_t sid, uint16_t msgId, uint32_t seqId)
@@ -33,9 +34,14 @@ public:
     void SetSessionId(uint32_t sid) { header_.sessionId = sid; }
     void SetMessageId(uint16_t id) { header_.messageId = id; }
     void SetSequenceId(uint32_t seqId) { header_.sequenceId = seqId; }
+    void SetFlags(uint16_t flags) { header_.flags = flags; }
+
     uint32_t GetSequenceId() const { return header_.sequenceId; }
+    uint32_t GetSessionId() const { return header_.sessionId; }
+    uint16_t GetMessageId() const { return header_.messageId; }
 
     void Append(const char *data, size_t len);
+    void Append(const std::string &data);
 
     // 序列化为字节流用于发送
     std::vector<char> Serialize() const;
