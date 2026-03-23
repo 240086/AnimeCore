@@ -20,11 +20,8 @@ class Connection;
 
 struct Callbacks
 {
-    // 🔥 升级：带 seqId
     std::function<void(const std::shared_ptr<Connection> &,
-                       uint32_t sid,
                        uint16_t msgId,
-                       uint32_t seqId,
                        const char *data,
                        size_t len)>
         onPacket;
@@ -78,6 +75,11 @@ public:
             .count();
     }
 
+    uint32_t NextSeqId()
+    {
+        return seq_id_.fetch_add(1, std::memory_order_relaxed);
+    }
+
 private:
     void DoRead();
     void DoWrite();
@@ -104,4 +106,6 @@ private:
 
     Callbacks callbacks_;
     Options options_;
+
+    std::atomic<uint32_t> seq_id_{0};
 };
