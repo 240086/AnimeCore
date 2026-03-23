@@ -1,71 +1,94 @@
+// AnimeCore/include/common/config/Config.h
 #pragma once
 
-#include <string>
 #include <yaml-cpp/yaml.h>
-#include <utility>
+#include <string>
 #include <vector>
+#include <sstream>
+#include <iostream>
 
-struct GameServerNode
+namespace AnimeCore
 {
-    std::string typeStr; // 存储字符串，如 "LOGIN"
-    std::string host;
-    int port;
-    int connections;
-};
 
-class Config
-{
-public:
-    static Config &Instance();
+    class Config
+    {
+    public:
+        static Config &Instance()
+        {
+            static Config instance;
+            return instance;
+        }
 
-    bool Load(const std::string &file);
+        // 加载配置文件
+        bool Load(const std::string &filename)
+        {
+            try
+            {
+                root_ = YAML::LoadFile(filename);
+                return true;
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "[Config] Load failed: " << e.what() << std::endl;
+                return false;
+            }
+        }
 
-    int GetServerPort() const;
-    int GetWorkerThreads() const;
+        /**
+         * @brief 通用泛型获取接口
+         * @param path 支持点号分隔的路径，如 "server.listen_port"
+         * @param defaultValue 若路径不存在或解析失败返回的默认值
+         */
+        template <typename T>
+        T GetValue(const std::string &path, T defaultValue = T()) const
+        {
+            try
+            {
+                YAML::Node node = FindNode(path);
+                if (!node || node.IsDefined() || node.IsNull())
+                {
+                    return defaultValue;
+                }
+                return node.as<T>();
+            }
+            catch (...)
+            {
+                return defaultValue;
+            }
+        }
 
-    // --- 后端服务器集群 (新的) ---
-    std::vector<GameServerNode> GetGameServers() const;
+        /**
+         * @brief 获取原始 YAML 节点（用于处理列表或对象）
+         */
+        YAML::Node GetNode(const std::string &path) const
+        {
+            return FindNode(path);
+        }
 
-    // --- 路由逻辑 (关键) ---
-    // 返回 pair: [min_id, max_id]
-    std::pair<int, int> GetLoginRange() const;
-    std::pair<int, int> GetGameRange() const;
+    private:
+        Config() = default;
+        YAML::Node root_;
 
-    // --- 超时与保护 ---
-    int GetBackendRequestTimeout() const;
-    int GetClientIdleTimeout() const;
+        // 内部路径解析逻辑
+        YAML::Node FindNode(const std::string &path) const
+        {
+            std::vector<std::string> keys;
+            std::stringstream ss(path);
+            std::string key;
+            while (std::getline(ss, key, '.'))
+            {
+                keys.push_back(key);
+            }
 
-    std::string GetMysqlHost() const;
-    int GetMysqlPort() const;
-    std::string GetMysqlUser() const;     // 新增
-    std::string GetMysqlPassword() const; // 新增
-    std::string GetMysqlDatabase() const; // 新增
-    int GetMysqlPoolSize() const;         // 新增
+            YAML::Node curr = root_;
+            for (const auto &k : keys)
+            {
+                if (!curr[k])
+                    return YAML::Node(YAML::NodeType::Undefined);
+                curr = curr[k];
+            }
+            return curr;
+        }
+    };
 
-    std::string GetRedisHost() const;
-    int GetRedisPort() const;
-    int GetRedisPoolSize() const;
-
-    std::string GetConfigDir() const;
-
-    // --- 网关(Gateway) 核心配置 ---
-    int GetGatewayPort() const;         // 网关监听端口（原 GetServerPort）
-    std::string GetBackendHost() const; // 后端 Server IP
-    int GetBackendPort() const;         // 后端 Server 端口
-    int GetBackendPoolSize() const;     // 转发连接池大小
-
-    //限流
-    int GetIpQps() const;
-    int GetIpBurst() const;
-    int GetSidQps() const;
-    int GetSidBurst() const;
-
-private:
-    Config() = default;
-
-    // 内部泛型工具：增加安全性
-    template <typename T>
-    T GetValue(const std::vector<std::string> &path, T defaultValue) const;
-
-    YAML::Node root;
-};
+} // namespace AnimeCore

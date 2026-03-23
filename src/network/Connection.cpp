@@ -1,5 +1,4 @@
 #include "network/Connection.h"
-
 #include "common/logger/Logger.h"
 
 Connection::Connection(
@@ -12,7 +11,8 @@ Connection::Connection(
       options_(std::move(options))
 {
 }
-boost::asio::ip::tcp::socket &Connection::GetSocket()
+
+tcp::socket &Connection::GetSocket()
 {
     return socket_;
 }
@@ -21,14 +21,6 @@ void Connection::Start()
 {
     last_active_ = std::chrono::steady_clock::now();
     DoRead();
-}
-
-void Connection::HandlePacket(uint16_t msgId, const char *data, size_t len)
-{
-    if (callbacks_.onPacket)
-    {
-        callbacks_.onPacket(shared_from_this(), msgId, data, len);
-    }
 }
 
 void Connection::DoRead()
@@ -47,9 +39,16 @@ void Connection::DoRead()
 
                                            parser_.Parse(
                                                recv_buffer_,
-                                               [this](uint16_t msgId, const char *data, size_t len)
+                                               [this, self](uint32_t sid,
+                                                            uint16_t msgId,
+                                                            uint32_t seqId,
+                                                            const char *data,
+                                                            size_t len)
                                                {
-                                                   HandlePacket(msgId, data, len);
+                                                   if (callbacks_.onPacket)
+                                                   {
+                                                       callbacks_.onPacket(self, sid, msgId, seqId, data, len);
+                                                   }
                                                });
 
                                            DoRead();
@@ -65,30 +64,31 @@ void Connection::DoRead()
                                    }));
 }
 
-void Connection::SendPacket(const Packet &packet)
+void Connection::SendRaw(std::shared_ptr<std::vector<char>> data)
 {
     if (closed_.load())
         return;
 
-    auto data = std::make_shared<std::vector<char>>(packet.Serialize());
-
-    boost::asio::post(strand_, [this, self = shared_from_this(), data]()
+    boost::asio::post(strand_,
+                      [this, self = shared_from_this(), data]()
                       {
-        if (closed_.load()) return;
+                          if (closed_.load())
+                              return;
 
-        if (write_queue_.size() > options_.maxWriteQueueSize)
-        {
-            LOG_WARN("drop packet due to queue limit, session={}", session_id_);
-            return;
-        }
+                          if (write_queue_.size() > options_.maxWriteQueueSize)
+                          {
+                              LOG_WARN("drop packet due to queue limit, session={}", session_id_);
+                              return;
+                          }
 
-        bool writing = !write_queue_.empty();
-        write_queue_.push_back(data);
+                          bool writing = !write_queue_.empty();
+                          write_queue_.push_back(data);
 
-        if (!writing)
-        {
-            DoWrite();
-        } });
+                          if (!writing)
+                          {
+                              DoWrite();
+                          }
+                      });
 }
 
 void Connection::DoWrite()
@@ -110,10 +110,7 @@ void Connection::DoWrite()
                                            return;
                                        }
 
-                                       if (!write_queue_.empty())
-                                       {
-                                           write_queue_.pop_front();
-                                       }
+                                       write_queue_.pop_front();
 
                                        if (!write_queue_.empty() && !closed_.load())
                                        {
@@ -127,45 +124,49 @@ void Connection::Close()
     if (closed_.exchange(true))
         return;
 
-    boost::asio::post(strand_, [this, self = shared_from_this()]()
+    boost::asio::post(strand_,
+                      [this, self = shared_from_this()]()
                       {
-        write_queue_.clear();
+                          write_queue_.clear();
 
-        if (socket_.is_open())
-        {
-            boost::system::error_code ec;
-            socket_.shutdown(tcp::socket::shutdown_both, ec);
-            socket_.close(ec);
-        }
+                          if (socket_.is_open())
+                          {
+                              boost::system::error_code ec;
+                              socket_.shutdown(tcp::socket::shutdown_both, ec);
+                              socket_.close(ec);
+                          }
 
-        const uint64_t sid = session_id_;
-        const uint64_t cid = connection_id_;
+                          uint64_t sid = session_id_;
+                          uint64_t cid = connection_id_;
 
-        if (callbacks_.onClosed)
-        {
-            callbacks_.onClosed(self, cid, sid);
-        }
+                          if (callbacks_.onClosed)
+                          {
+                              callbacks_.onClosed(self, cid, sid);
+                          }
 
-        if (sid != 0)
-        {
-            DispatchCleanupTask(sid);
-            session_id_ = 0;
-        } });
+                          if (sid != 0)
+                          {
+                              DispatchCleanupTask(sid);
+                              session_id_ = 0;
+                          }
+                      });
 }
 
 void Connection::DispatchCleanupTask(uint64_t sid)
 {
     if (!callbacks_.onSessionCleanup)
-    {
         return;
-    }
 
     if (options_.cleanupExecutor)
     {
-        options_.cleanupExecutor([handler = callbacks_.onSessionCleanup, sid]()
-                                 { handler(sid); });
-        return;
+        options_.cleanupExecutor(
+            [handler = callbacks_.onSessionCleanup, sid]()
+            {
+                handler(sid);
+            });
     }
-
-    callbacks_.onSessionCleanup(sid);
+    else
+    {
+        callbacks_.onSessionCleanup(sid);
+    }
 }
