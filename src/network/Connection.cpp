@@ -64,7 +64,7 @@ void Connection::DoRead()
                                    }));
 }
 
-void Connection::SendRaw(std::shared_ptr<std::vector<char>> &data)
+void Connection::SendRaw(std::shared_ptr<std::vector<char>> data)
 {
     if (closed_.load())
         return;

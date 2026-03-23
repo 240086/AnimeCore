@@ -56,7 +56,7 @@ public:
     void Start();
 
     // 🔥 直接发送 raw（统一协议）
-    void SendRaw(std::shared_ptr<std::vector<char>> &data);
+    void SendRaw(std::shared_ptr<std::vector<char>> data);
 
     void Close();
 
