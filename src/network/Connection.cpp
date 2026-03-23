@@ -64,7 +64,7 @@ void Connection::DoRead()
                                    }));
 }
 
-void Connection::SendRaw(std::shared_ptr<std::vector<char>> data)
+void Connection::SendRaw(std::shared_ptr<std::vector<char>> &data)
 {
     if (closed_.load())
         return;
@@ -114,6 +114,7 @@ void Connection::DoWrite()
 
                                        if (!write_queue_.empty() && !closed_.load())
                                        {
+                                           last_active_ = std::chrono::steady_clock::now();
                                            DoWrite();
                                        }
                                    }));

@@ -56,7 +56,7 @@ public:
     void Start();
 
     // 🔥 直接发送 raw（统一协议）
-    void SendRaw(std::shared_ptr<std::vector<char>> data);
+    void SendRaw(std::shared_ptr<std::vector<char>> &data);
 
     void Close();
 
@@ -65,6 +65,18 @@ public:
 
     uint64_t GetSessionId() const { return session_id_; }
     uint64_t GetConnectionId() const { return connection_id_; }
+
+    void SetCallbacks(Callbacks cb)
+    {
+        callbacks_ = std::move(cb);
+    }
+
+    uint64_t GetLastActiveTimeUs() const
+    {
+        return std::chrono::duration_cast<std::chrono::microseconds>(
+                   last_active_.time_since_epoch())
+            .count();
+    }
 
 private:
     void DoRead();
