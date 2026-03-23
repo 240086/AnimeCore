@@ -1,52 +1,38 @@
+// InternalPacket.h (定型版)
 #pragma once
-
-#include <cstdint>
-#include <vector>
-#include <cstring>
+#include "network/protocol/IMessage.h"
 #include <boost/asio/detail/socket_ops.hpp>
-#include <string>
+#include <vector>
 
-#pragma pack(push, 1)
-struct InternalPacketHeader
-{
-    uint32_t length;     // 总包长（通常不含自身4字节，或根据协议约定）
-    uint32_t sessionId;  // 4字节
-    uint16_t messageId;  // 2字节
-    uint32_t sequenceId; // 4字节（🔥 核心新增）
-    uint16_t flags;      // 2字节（扩展用，如压缩、加密标志）
-};
-#pragma pack(pop)
-
-class InternalPacket
+class InternalPacket : public IMessage
 {
 public:
-    InternalPacket() = default;
+    // --- 实现 IMessage 接口 ---
+    uint16_t GetMsgId() const override { return messageId_; }
+    MessageType GetType() const override { return MessageType::INTERNAL; }
+    const char *GetData() const override { return body_.data(); }
+    size_t GetDataLen() const override { return body_.size(); }
 
-    // 允许构造时直接初始化核心字段，减少多次函数调用
-    InternalPacket(uint32_t sid, uint16_t msgId, uint32_t seqId)
-    {
-        header_.sessionId = sid;
-        header_.messageId = msgId;
-        header_.sequenceId = seqId;
-        header_.flags = 0;
-    }
+    // --- 内网特有元数据 ---
+    uint32_t GetSessionId() const { return sessionId_; }
+    uint32_t GetSequenceId() const { return sequenceId_; }
+    uint16_t GetFlags() const { return flags_; }
 
-    void SetSessionId(uint32_t sid) { header_.sessionId = sid; }
-    void SetMessageId(uint16_t id) { header_.messageId = id; }
-    void SetSequenceId(uint32_t seqId) { header_.sequenceId = seqId; }
-    void SetFlags(uint16_t flags) { header_.flags = flags; }
+    void SetSessionId(uint32_t sid) { sessionId_ = sid; }
+    void SetMessageId(uint16_t id) { messageId_ = id; }
+    void SetSequenceId(uint32_t seqId) { sequenceId_ = seqId; }
+    void SetFlags(uint16_t flags) { flags_ = flags; }
+    void SetBody(std::vector<char> &&body) { body_ = std::move(body); }
 
-    uint32_t GetSequenceId() const { return header_.sequenceId; }
-    uint32_t GetSessionId() const { return header_.sessionId; }
-    uint16_t GetMessageId() const { return header_.messageId; }
-
-    void Append(const char *data, size_t len);
     void Append(const std::string &data);
+    void Append(const char *data, size_t len);
 
-    // 序列化为字节流用于发送
     std::vector<char> Serialize() const;
 
 private:
-    InternalPacketHeader header_{};
+    uint32_t sessionId_ = 0;
+    uint16_t messageId_ = 0;
+    uint32_t sequenceId_ = 0;
+    uint16_t flags_ = 0;
     std::vector<char> body_;
 };

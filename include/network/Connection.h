@@ -10,8 +10,7 @@
 #include <vector>
 
 #include "network/buffer/RecvBuffer.h"
-#include "network/protocol/InternalPacketParser.h"
-#include "network/protocol/ClientPacketParser.h"
+#include "network/protocol/PacketParser.h"
 
 using tcp = boost::asio::ip::tcp;
 using strand_type = boost::asio::strand<boost::asio::io_context::executor_type>;
@@ -21,10 +20,10 @@ class Connection;
 
 struct Callbacks
 {
-    std::function<void(const std::shared_ptr<Connection> &,
-                       uint16_t msgId,
-                       const char *data,
-                       size_t len)>
+    // ✅ 统一使用 IMessage 抽象
+    std::function<void(
+        const std::shared_ptr<Connection> &,
+        std::shared_ptr<IMessage>)>
         onPacket;
 
     std::function<void(const std::shared_ptr<Connection> &,
@@ -81,6 +80,11 @@ public:
         return seq_id_.fetch_add(1, std::memory_order_relaxed);
     }
 
+    void SetParser(std::unique_ptr<PacketParser> parser)
+    {
+        parser_ = std::move(parser);
+    }
+
 private:
     void DoRead();
     void DoWrite();
@@ -94,7 +98,7 @@ private:
     char buffer_[BUFFER_SIZE]{};
 
     RecvBuffer recv_buffer_;
-    ClientPacketParser parser_; // 🔥 替换
+    std::unique_ptr<PacketParser> parser_;
 
     uint64_t session_id_ = 0;
     uint64_t connection_id_ = 0;

@@ -37,34 +37,40 @@ void Connection::DoRead()
                 {
                     last_active_ = std::chrono::steady_clock::now();
 
+                    // 1. 将新数据推入接收缓冲区
                     recv_buffer_.Append(buffer_, length);
 
-                    // ✅ 只解析业务包（不带 sid / seq）
-                    parser_.Parse(
-                        recv_buffer_,
-                        [this, self](uint16_t msgId,
-                                     const char *data,
-                                     size_t len)
-                        {
-                            if (callbacks_.onPacket)
-                            {
-                                callbacks_.onPacket(
-                                    self,
-                                    msgId,
-                                    data,
-                                    len);
-                            }
-                        });
+                    // 2. 准备一个容器接收解析出的消息对象
+                    // 使用 shared_ptr 保证消息在分发过程中的生命周期安全
+                    std::vector<std::shared_ptr<IMessage>> messages;
 
+                    // 3. 🔥 核心变化：由 Parser 填充 messages 列表
+                    // 此时 parser_ 是 std::unique_ptr<PacketParser>
+                    if (parser_)
+                    {
+                        parser_->Parse(recv_buffer_, messages);
+                    }
+
+                    // 4. 遍历并分发消息
+                    for (auto &msg : messages)
+                    {
+                        if (callbacks_.onPacket)
+                        {
+                            // 注意：这里的 callbacks_.onPacket 签名需要修改
+                            // 变为：void(std::shared_ptr<Connection>, std::shared_ptr<IMessage>)
+                            callbacks_.onPacket(self, msg);
+                        }
+                    }
+
+                    // 5. 继续监听下一次读取
                     DoRead();
                 }
                 else
                 {
                     if (ec != boost::asio::error::operation_aborted)
                     {
-                        LOG_WARN("client read error: {} conn={}",
-                                 ec.message(),
-                                 connection_id_);
+                        LOG_WARN("Connection read error: {} conn_id={}",
+                                 ec.message(), connection_id_);
                     }
                     Close();
                 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "network/buffer/RecvBuffer.h"
-#include <boost/asio/detail/socket_ops.hpp>
 #include <functional>
 #include <cstdint>
 

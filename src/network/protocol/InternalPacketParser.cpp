@@ -1,79 +1,63 @@
 #include "network/protocol/InternalPacketParser.h"
+#include "network/protocol/InternalPacket.h"
 #include "common/logger/Logger.h"
 #include <cstring>
 
-void InternalPacketParser::Parse(RecvBuffer &buffer, Callback cb)
+void InternalPacketParser::Parse(RecvBuffer &buffer, std::vector<std::shared_ptr<IMessage>> &out)
 {
-    // 工业级安全限制
-    constexpr uint32_t MAX_PACKET_SIZE = 16 * 1024 * 1024; // 提升至 16MB (应对大数据包)
-    // 最小长度 = HEADER_SIZE (因为我们的 Length 包含了 Header 本身)
-    constexpr uint32_t MIN_PACKET_SIZE = HEADER_SIZE;
+    // 对应你的 16 字节头：4(Len)+4(SID)+2(MsgID)+4(SeqID)+2(Flags)
+    constexpr size_t HEADER_SIZE = 16;
+    constexpr uint32_t MAX_PACKET_SIZE = 16 * 1024 * 1024; // 16MB
 
     while (true)
     {
-        // 1. 首先检查是否够读取“长度字段”(4字节)
+        // 1. 至少要能读到长度字段
         if (buffer.Size() < 4)
             return;
 
-        const char *data = buffer.Data();
-
-        // 2. 解析总长度 (Network Order)
+        // 2. 预读总长度
         uint32_t netLen;
-        std::memcpy(&netLen, data, 4);
+        std::memcpy(&netLen, buffer.Data(), 4);
         uint32_t totalLen = ntohl(netLen);
 
-        // ✅ 安全审计：防御性检查
-        if (totalLen < MIN_PACKET_SIZE || totalLen > MAX_PACKET_SIZE)
+        // 3. 安全检查
+        if (totalLen < HEADER_SIZE || totalLen > MAX_PACKET_SIZE)
         {
-            LOG_ERROR("[Parser] Fatal protocol error. Invalid length: {}. Dropping buffer.", totalLen);
-            buffer.Consume(buffer.Size()); // 协议已错乱，强制清空防止脏数据污染后续包
+            LOG_ERROR("[InternalParser] Fatal error. Invalid totalLen: {}", totalLen);
+            buffer.Consume(buffer.Size()); // 丢弃所有数据
             return;
         }
 
-        // 3. 检查当前缓冲区是否收全了整个包
+        // 4. 等待全包
         if (buffer.Size() < totalLen)
-            return; // 数据不足，等待下一次 Read 事件
+            return;
 
-        // --- 4. 协议字段精准拆解 (严格对应 InternalPacketHeader 布局) ---
-        uint32_t netSid;
-        uint16_t netMsgId;
-        uint32_t netSeqId;
-        uint16_t netFlags;
+        // 5. 精准拆解字段 (注意偏移量)
+        const char *d = buffer.Data();
 
-        // 偏移量：
-        // +0: Length (4)
-        // +4: SessionId (4)
-        // +8: MessageId (2)
-        // +10: SequenceId (4)
-        // +14: Flags (2)
-        std::memcpy(&netSid, data + 4, 4);
-        std::memcpy(&netMsgId, data + 8, 2);
-        std::memcpy(&netSeqId, data + 10, 4);
-        std::memcpy(&netFlags, data + 14, 2);
+        uint32_t sid = ntohl(*(uint32_t *)(d + 4));
+        uint16_t msgId = ntohs(*(uint16_t *)(d + 8));
+        uint32_t seqId = ntohl(*(uint32_t *)(d + 10));
+        uint16_t flags = ntohs(*(uint16_t *)(d + 14));
 
-        uint32_t sid = ntohl(netSid);
-        uint16_t msgId = ntohs(netMsgId);
-        uint32_t seqId = ntohl(netSeqId);
-        // uint16_t flags = ntohs(netFlags); // 预留字段，暂不处理
+        // 6. 构造对象
+        auto packet = std::make_shared<InternalPacket>();
+        packet->SetSessionId(sid);
+        packet->SetMessageId(msgId);
+        packet->SetSequenceId(seqId);
+        packet->SetFlags(flags);
 
-        // 5. 计算 Body 位置和长度
+        // 7. 提取 Body
         size_t bodyLen = totalLen - HEADER_SIZE;
-        const char *body = (bodyLen > 0) ? (data + HEADER_SIZE) : nullptr;
-
-        // 6. 触发业务回调
-        if (cb)
+        if (bodyLen > 0)
         {
-            try
-            {
-                cb(sid, msgId, seqId, body, bodyLen);
-            }
-            catch (const std::exception &e)
-            {
-                LOG_ERROR("[Parser] Callback exception: {}", e.what());
-            }
+            std::vector<char> body(bodyLen);
+            std::memcpy(body.data(), d + HEADER_SIZE, bodyLen);
+            packet->SetBody(std::move(body));
         }
 
-        // 7. 从环形缓冲区移除已处理数据
+        // 8. 产出并移除
+        out.push_back(std::move(packet));
         buffer.Consume(totalLen);
     }
 }

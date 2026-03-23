@@ -23,42 +23,30 @@ void InternalPacket::Append(const std::string &data)
 
 std::vector<char> InternalPacket::Serialize() const
 {
-    // 1. 动态计算 Header 大小，增强可维护性
-    constexpr size_t HEADER_SIZE = sizeof(InternalPacketHeader); // 应该是 16 字节
-
+    // 1. 确定头部大小 (16 字节)
+    constexpr size_t HEADER_SIZE = 16;
     uint32_t bodyLen = static_cast<uint32_t>(body_.size());
-    // 协议约定：length 通常指 [Header + Body] 总长度
     uint32_t totalLen = HEADER_SIZE + bodyLen;
 
-    std::vector<char> sendBuf;
-    sendBuf.resize(totalLen);
+    // 2. 预分配内存
+    // 注意：std::vector<char> buf(totalLen) 会执行零初始化，
+    // 如果对性能有极致要求，这里可以考虑使用自定义的 Buffer 类
+    std::vector<char> buf(totalLen);
+    char *ptr = buf.data();
 
-    // 2. 字节序转换 (Big-Endian / Network Order)
-    uint32_t netLen = htonl(totalLen);
-    uint32_t netSid = htonl(header_.sessionId);
-    uint16_t netMsgId = htons(header_.messageId);
-    uint32_t netSeqId = htonl(header_.sequenceId);
-    uint16_t netFlags = htons(header_.flags);
-
-    // 3. 高速内存拷贝到发送缓冲区
-    char *ptr = sendBuf.data();
-
-    std::memcpy(ptr, &netLen, 4);
-    ptr += 4;
-    std::memcpy(ptr, &netSid, 4);
-    ptr += 4;
-    std::memcpy(ptr, &netMsgId, 2);
-    ptr += 2;
-    std::memcpy(ptr, &netSeqId, 4);
-    ptr += 4;
-    std::memcpy(ptr, &netFlags, 2);
-    ptr += 2;
+    // 3. 字节序转换并填充 (手动偏移填充比多次 memcpy 稍微快一点点)
+    // 这里建议直接操作内存，避免多余的变量创建
+    *(uint32_t *)(ptr + 0) = htonl(totalLen);
+    *(uint32_t *)(ptr + 4) = htonl(sessionId_); // 确保类成员名匹配
+    *(uint16_t *)(ptr + 8) = htons(messageId_);
+    *(uint32_t *)(ptr + 10) = htonl(sequenceId_);
+    *(uint16_t *)(ptr + 14) = htons(flags_);
 
     // 4. 拷贝 Body
     if (bodyLen > 0)
     {
-        std::memcpy(ptr, body_.data(), bodyLen);
+        std::memcpy(ptr + HEADER_SIZE, body_.data(), bodyLen);
     }
 
-    return sendBuf;
+    return buf;
 }
