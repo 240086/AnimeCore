@@ -34,11 +34,20 @@ void InternalPacketParser::Parse(RecvBuffer &buffer, std::vector<std::shared_ptr
 
         // 5. 精准拆解字段 (注意偏移量)
         const char *d = buffer.Data();
+        uint32_t sid, seqId;
+        uint16_t msgId, flags;
 
-        uint32_t sid = ntohl(*(uint32_t *)(d + 4));
-        uint16_t msgId = ntohs(*(uint16_t *)(d + 8));
-        uint32_t seqId = ntohl(*(uint32_t *)(d + 10));
-        uint16_t flags = ntohs(*(uint16_t *)(d + 14));
+        std::memcpy(&sid, d + 4, 4);
+        sid = ntohl(sid);
+
+        std::memcpy(&msgId, d + 8, 2);
+        msgId = ntohs(msgId);
+
+        std::memcpy(&seqId, d + 10, 4);
+        seqId = ntohl(seqId);
+
+        std::memcpy(&flags, d + 14, 2);
+        flags = ntohs(flags);
 
         // 6. 构造对象
         auto packet = std::make_shared<InternalPacket>();
