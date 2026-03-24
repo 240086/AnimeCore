@@ -44,6 +44,11 @@ public:
         }
     }
 
+    YAML::Node GetNode(const std::string &path) const
+    {
+        return FindNode(path);
+    }
+
 private:
     Config() = default;
     YAML::Node root_;
