@@ -14,6 +14,7 @@ enum class MetricId : uint32_t
     RateLimitHit,
 
     CircuitBreakerOpen,
+    CircuitBreakerClose,
     BackendFail,
 
     // ---- Gauge ----
