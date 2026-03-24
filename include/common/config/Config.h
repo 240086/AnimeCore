@@ -50,29 +50,29 @@ private:
 
     YAML::Node FindNode(const std::string &path) const
     {
-        if (path.empty())
+        if (path.empty() || !root_.IsDefined())
             return root_;
 
         std::stringstream ss(path);
         std::string key;
-        YAML::Node curr = root_;
+
+        YAML::Node temp = root_;
 
         while (std::getline(ss, key, '.'))
         {
             if (key.empty())
                 continue;
 
-            // 显式检查：当前必须是 Map 且包含 Key
-            if (curr.IsMap() && curr[key].IsDefined())
+            if (temp.IsMap() && temp[key].IsDefined())
             {
-                curr = curr[key];
+                YAML::Node next = temp[key];
+                temp = next;
             }
             else
             {
-                // 路径无法匹配，直接返回 Undefined 节点
                 return YAML::Node(YAML::NodeType::Undefined);
             }
         }
-        return curr;
+        return temp;
     }
 };
