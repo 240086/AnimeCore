@@ -152,8 +152,8 @@ void Connection::Close()
                               socket_.close(ec);
                           }
 
-                          uint64_t sid = session_id_;
-                          uint64_t cid = connection_id_;
+                          uint32_t sid = session_id_;
+                          uint32_t cid = connection_id_;
 
                           if (callbacks_.onClosed)
                           {
@@ -168,7 +168,7 @@ void Connection::Close()
                       });
 }
 
-void Connection::DispatchCleanupTask(uint64_t sid)
+void Connection::DispatchCleanupTask(uint32_t sid)
 {
     if (!callbacks_.onSessionCleanup)
         return;

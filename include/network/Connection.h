@@ -27,11 +27,11 @@ struct Callbacks
         onPacket;
 
     std::function<void(const std::shared_ptr<Connection> &,
-                       uint64_t connectionId,
-                       uint64_t sessionId)>
+                       uint32_t connectionId,
+                       uint32_t sessionId)>
         onClosed;
 
-    std::function<void(uint64_t sessionId)> onSessionCleanup;
+    std::function<void(uint32_t sessionId)> onSessionCleanup;
 };
 
 struct Options
@@ -57,11 +57,11 @@ public:
 
     void Close();
 
-    void SetConnectionId(uint64_t id) { connection_id_ = id; }
-    void SetSessionId(uint64_t id) { session_id_ = id; }
+    void SetConnectionId(uint32_t id) { connection_id_ = id; }
+    void SetSessionId(uint32_t id) { session_id_ = id; }
 
-    uint64_t GetSessionId() const { return session_id_; }
-    uint64_t GetConnectionId() const { return connection_id_; }
+    uint32_t GetSessionId() const { return session_id_; }
+    uint32_t GetConnectionId() const { return connection_id_; }
 
     void SetCallbacks(Callbacks cb)
     {
@@ -88,7 +88,7 @@ public:
 private:
     void DoRead();
     void DoWrite();
-    void DispatchCleanupTask(uint64_t sid);
+    void DispatchCleanupTask(uint32_t sid);
 
 private:
     tcp::socket socket_;
@@ -100,8 +100,8 @@ private:
     RecvBuffer recv_buffer_;
     std::unique_ptr<PacketParser> parser_;
 
-    uint64_t session_id_ = 0;
-    uint64_t connection_id_ = 0;
+    uint32_t session_id_ = 0;
+    uint32_t connection_id_ = 0;
 
     std::chrono::steady_clock::time_point last_active_;
 
