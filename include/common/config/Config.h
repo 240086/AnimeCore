@@ -52,14 +52,26 @@ private:
     {
         if (path.empty())
             return root_;
+
         std::stringstream ss(path);
         std::string key;
-        YAML::Node curr = root_; // 直接使用引用语义，不要 Clone
+        YAML::Node curr = root_;
+
         while (std::getline(ss, key, '.'))
         {
-            if (!curr[key])
-                return YAML::Node(); // 返回 Undefined
-            curr = curr[key];
+            if (key.empty())
+                continue;
+
+            // 显式检查：当前必须是 Map 且包含 Key
+            if (curr.IsMap() && curr[key].IsDefined())
+            {
+                curr = curr[key];
+            }
+            else
+            {
+                // 路径无法匹配，直接返回 Undefined 节点
+                return YAML::Node(YAML::NodeType::Undefined);
+            }
         }
         return curr;
     }
