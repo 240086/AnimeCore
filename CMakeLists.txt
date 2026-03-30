@@ -35,6 +35,10 @@ target_link_libraries(AnimeCore
         yaml-cpp::yaml-cpp
 )
 
+target_compile_definitions(AnimeCore PUBLIC 
+    $<$<CONFIG:Debug>:DEBUG>
+)
+
 # Windows 下的额外支持
 if(WIN32)
     target_link_libraries(AnimeCore PUBLIC ws2_32 mswsock)
